@@ -3,90 +3,59 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>รายงานข้อมูลการศึกษาต่อ</title>
+<title>แดชบอร์ดสรุปภาพรวมการศึกษาต่อของนักเรียน</title>
 <style>
   body {
     font-family: "Sarabun", Tahoma, sans-serif;
     margin: 20px;
-    background: #f9f9f9;
+    background-color: #f4f7fa;
     color: #333;
   }
-  h1 {
+  h1, h2 {
+    color: #004a99;
     text-align: center;
-    color: #005a9c;
-    margin-bottom: 20px;
   }
-  .dashboard {
+  h2 {
+    margin-top: 40px;
+    border-bottom: 2px solid #007acc;
+    padding-bottom: 8px;
+  }
+  .summary {
+    max-width: 900px;
+    margin: 0 auto 30px auto;
+    background: white;
+    padding: 20px 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    font-size: 1.1em;
+    line-height: 1.6;
+  }
+  .charts {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 30px;
-    margin-bottom: 30px;
+    gap: 40px;
+    max-width: 960px;
+    margin: 0 auto;
   }
-  .chart-container {
-    background: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    width: 350px;
+  .chart-box {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    width: 420px;
   }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    background: #fff;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  canvas {
+    display: block;
+    margin: 0 auto;
   }
-  th, td {
-    border: 1px solid #ccc;
-    padding: 8px 10px;
-    text-align: left;
-    vertical-align: top;
-  }
-  th {
-    background-color: #007acc;
-    color: white;
-    position: sticky;
-    top: 0;
-    z-index: 1;
-  }
-  tr:nth-child(even) {
-    background-color: #f2f9ff;
-  }
-  @media (max-width: 768px) {
-    .dashboard {
+  @media (max-width: 900px) {
+    .charts {
       flex-direction: column;
       align-items: center;
     }
-    table, thead, tbody, th, td, tr {
-      display: block;
-    }
-    thead tr {
-      display: none;
-    }
-    tr {
-      margin-bottom: 15px;
-      border: 1px solid #ddd;
-      padding: 10px;
-      background: #fff;
-      box-shadow: 0 0 5px rgba(0,0,0,0.05);
-    }
-    td {
-      border: none;
-      padding-left: 50%;
-      position: relative;
-      text-align: right;
-      white-space: normal;
-    }
-    td::before {
-      position: absolute;
-      top: 8px;
-      left: 10px;
-      width: 45%;
-      white-space: nowrap;
-      font-weight: bold;
-      text-align: left;
-      content: attr(data-label);
-      color: #007acc;
+    .chart-box {
+      width: 90%;
     }
   }
 </style>
@@ -94,90 +63,82 @@
 </head>
 <body>
 
-<h1>รายงานข้อมูลการศึกษาต่อของนักเรียน</h1>
+<h1>แดชบอร์ดสรุปภาพรวมการศึกษาต่อของนักเรียน</h1>
 
-<div class="dashboard">
-  <div class="chart-container">
-    <canvas id="barChart"></canvas>
-  </div>
-  <div class="chart-container">
-    <canvas id="pieChart"></canvas>
-  </div>
-</div>
+<section class="summary">
+  <h2>ภาพรวมของนักเรียนที่เข้าศึกษาต่อในมหาวิทยาลัย</h2>
+  <p>จากข้อมูลล่าสุด พบว่านักเรียนจำนวน <strong>153 คน</strong> ได้ศึกษาต่อในระดับอุดมศึกษา (มหาวิทยาลัย) ซึ่งแสดงถึงความสำเร็จในการเข้าสู่ระบบการศึกษาระดับสูง</p>
+  <p>นอกจากนี้ ยังมีนักเรียนที่เลือกศึกษาต่อในระดับ ปวส. จำนวน <strong>1 คน</strong> และนักเรียนในสถานะอื่น ๆ เช่น ซิ่วไปปีหน้า, Gap year, ไม่ศึกษาต่อ รวมทั้งสิ้น <strong>14 คน</strong></p>
+</section>
 
-<table>
-  <thead>
-    <tr>
-      <th>คำนำหน้า</th>
-      <th>ชื่อ-นามสกุล</th>
-      <th>ห้อง</th>
-      <th>สถานะ</th>
-      <th>ระดับการศึกษา</th>
-      <th>สถาบัน</th>
-      <th>คณะ</th>
-      <th>สาขา</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr><td data-label="คำนำหน้า">นาย</td><td data-label="ชื่อ-นามสกุล">ศุภณัฐ อัญชันบุตร</td><td data-label="ห้อง">ห้อง 1</td><td data-label="สถานะ">ศึกษาต่อ</td><td data-label="ระดับการศึกษา">ระดับอุดมศึกษา (มหาวิทยาลัย)</td><td data-label="สถาบัน">สถาบันเทคโนโลยีจิตรลดา</td><td data-label="คณะ">วิศวกรรมศาสตร์</td><td data-label="สาขา">วิศวกรรมคอมพิวเตอร์</td></tr>
-    <tr><td data-label="คำนำหน้า">นางสาว</td><td data-label="ชื่อ-นามสกุล">พัชรพร เพิ่มศิลป์</td><td data-label="ห้อง">ห้อง 1</td><td data-label="สถานะ">ศึกษาต่อ</td><td data-label="ระดับการศึกษา">ระดับอุดมศึกษา (มหาวิทยาลัย)</td><td data-label="สถาบัน">สถาบันการบินพลเรือน</td><td data-label="คณะ">วิทยาศาสตรบัณฑิต</td><td data-label="สาขา">วิทยาการการบิน</td></tr>
-    <tr><td data-label="คำนำหน้า">นาย</td><td data-label="ชื่อ-นามสกุล">โชติ ปราโมช ณ อยุธยา</td><td data-label="ห้อง">ห้อง 1</td><td data-label="สถานะ">ศึกษาต่อ</td><td data-label="ระดับการศึกษา">ระดับอุดมศึกษา (มหาวิทยาลัย)</td><td data-label="สถาบัน">มหาวิทยาลัยศิลปากร วิทยาเขตพระราชวังสนามจันทร์</td><td data-label="คณะ">อักษรศาสตร์</td><td data-label="สาขา">สังคีตไทย</td></tr>
-    <tr><td data-label="คำนำหน้า">นาย</td><td data-label="ชื่อ-นามสกุล">สิรภัทร นุศาจารย์</td><td data-label="ห้อง">ห้อง 1</td><td data-label="สถานะ">ศึกษาต่อ</td><td data-label="ระดับการศึกษา">ระดับอุดมศึกษา (มหาวิทยาลัย)</td><td data-label="สถาบัน">มหาวิทยาลัยศรีนครินทรวิโรฒ</td><td data-label="คณะ">สังคมศาสตร์</td><td data-label="สาขา">วิชาเอกพัฒนาชุมชนเมือง</td></tr>
-    <tr><td data-label="คำนำหน้า">นาย</td><td data-label="ชื่อ-นามสกุล">ธนธรณ์ สุขทั่วญาติ</td><td data-label="ห้อง">ห้อง 1</td><td data-label="สถานะ">ศึกษาต่อ</td><td data-label="ระดับการศึกษา">ระดับอุดมศึกษา (มหาวิทยาลัย)</td><td data-label="สถาบัน">มหาวิทยาลัยศรีนครินทรวิโรฒ </td><td data-label="คณะ">บริหารธุรกิจ</td><td data-label="สาขา">ธุรกิจระหว่างประเทศ</td></tr>
-    <tr><td data-label="คำนำหน้า">นางสาว</td><td data-label="ชื่อ-นามสกุล">ชนาภา พรมกสิกร</td><td data-label="ห้อง">ห้อง 7</td><td data-label="สถานะ">ซิ่วไปปีหน้า</td><td data-label="ระดับการศึกษา"></td><td data-label="สถาบัน"></td><td data-label="คณะ"></td><td data-label="สาขา"></td></tr>
-    <tr><td data-label="คำนำหน้า">นางสาว</td><td data-label="ชื่อ-นามสกุล">พิมญาดา โพธิ์ศรี</td><td data-label="ห้อง">ห้อง 1</td><td data-label="สถานะ">ศึกษาต่อ</td><td data-label="ระดับการศึกษา">ระดับอุดมศึกษา (มหาวิทยาลัย)</td><td data-label="สถาบัน">มหาวิทยาลัยศิลปากร วิทยาเขตเพชรบุรี</td><td data-label="คณะ">บริหารธุรกิจ</td><td data-label="สาขา">สาขาการจัดการนวัตกรรมทางธุรกิจ</td></tr>
-    <!-- เพิ่มข้อมูลนักเรียนทั้งหมดในลักษณะนี้ -->
-  </tbody>
-</table>
+<section class="charts">
+  <div class="chart-box">
+    <h2>จำนวนผู้ศึกษาต่อแยกตามระดับการศึกษา</h2>
+    <canvas id="eduLevelChart" width="400" height="300"></canvas>
+  </div>
+  <div class="chart-box">
+    <h2>สถานะของนักเรียนทั้งหมด</h2>
+    <canvas id="statusChart" width="400" height="300"></canvas>
+  </div>
+</section>
+
+<section class="summary">
+  <h2>สรุปสถานะการศึกษาต่อของนักเรียน</h2>
+  <p>นักเรียนส่วนใหญ่มีสถานะ <strong>ศึกษาต่อ</strong> จำนวน 153 คน แสดงให้เห็นถึงความมุ่งมั่นและความต่อเนื่องในการศึกษาของกลุ่มนักเรียนนี้</p>
+  <p>ในขณะที่นักเรียนที่เลือก <strong>ซิ่วไปปีหน้า</strong> มีจำนวน 2 คน และนักเรียนที่ <strong>ไม่ศึกษาต่อ</strong> มีจำนวน 5 คน ซึ่งเป็นข้อมูลที่สำคัญสำหรับการวางแผนและพัฒนาการศึกษาต่อไป</p>
+</section>
 
 <script>
-  // สรุปข้อมูลสถานะจากไฟล์
-  const statusCounts = {
-    "ศึกษาต่อ": 153,
-    "ซิ่วไปปีหน้า": 2,
-    "ไม่ศึกษาต่อ": 5,
-    "Gap year": 1,
-    "อื่นๆ": 6
-  };
+  // ข้อมูลสรุประดับการศึกษา
+  const eduLevelLabels = ['ระดับ ปวส.', 'ระดับอุดมศึกษา (มหาวิทยาลัย)'];
+  const eduLevelData = [1, 153];
 
-  // สรุประดับการศึกษา
-  const eduLevelCounts = {
-    "ระดับ ปวส.": 1,
-    "ระดับอุดมศึกษา (มหาวิทยาลัย)": 152
-  };
+  // ข้อมูลสรุปสถานะนักเรียน
+  const statusLabels = ['ศึกษาต่อ', 'ซิ่วไปปีหน้า', 'ไม่ศึกษาต่อ', 'Gap year', 'อื่นๆ'];
+  const statusData = [153, 2, 5, 1, 6];
 
-  // สร้างแผนภูมิแท่งแสดงระดับการศึกษา
-  const ctxBar = document.getElementById('barChart').getContext('2d');
-  new Chart(ctxBar, {
+  // สร้างแผนภูมิแท่งสำหรับระดับการศึกษา
+  const ctxEduLevel = document.getElementById('eduLevelChart').getContext('2d');
+  new Chart(ctxEduLevel, {
     type: 'bar',
     data: {
-      labels: Object.keys(eduLevelCounts),
+      labels: eduLevelLabels,
       datasets: [{
-        label: 'จำนวนผู้ศึกษาต่อ',
-        data: Object.values(eduLevelCounts),
-        backgroundColor: '#007acc'
+        label: 'จำนวน (คน)',
+        data: eduLevelData,
+        backgroundColor: ['#007acc', '#0099ff']
       }]
     },
     options: {
       responsive: true,
-      plugins: { legend: { display: false } },
-      scales: { y: { beginAtZero: true, precision: 0 } }
+      scales: {
+        y: { beginAtZero: true, precision: 0 }
+      },
+      plugins: {
+        legend: { display: false },
+        title: { display: false }
+      }
     }
   });
 
-  // สร้างแผนภูมิวงกลมแสดงสถานะ
-  const ctxPie = document.getElementById('pieChart').getContext('2d');
-  new Chart(ctxPie, {
+  // สร้างแผนภูมิวงกลมสำหรับสถานะนักเรียน
+  const ctxStatus = document.getElementById('statusChart').getContext('2d');
+  new Chart(ctxStatus, {
     type: 'pie',
     data: {
-      labels: Object.keys(statusCounts),
+      labels: statusLabels,
       datasets: [{
-        label: 'สัดส่วนสถานะนักเรียน',
-        data: Object.values(statusCounts),
+        label: 'สัดส่วนสถานะ',
+        data: statusData,
         backgroundColor: ['#007acc', '#ffa500', '#dc3545', '#6c757d', '#17a2b8']
       }]
     },
-    options: { responsive: true }
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'right' }
+      }
+    }
   });
 </script>
 
