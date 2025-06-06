@@ -1,146 +1,135 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>แดชบอร์ดสรุปภาพรวมการศึกษาต่อของนักเรียน</title>
-<style>
-  body {
-    font-family: "Sarabun", Tahoma, sans-serif;
-    margin: 20px;
-    background-color: #f4f7fa;
-    color: #333;
-  }
-  h1, h2 {
-    color: #004a99;
-    text-align: center;
-  }
-  h2 {
-    margin-top: 40px;
-    border-bottom: 2px solid #007acc;
-    padding-bottom: 8px;
-  }
-  .summary {
-    max-width: 900px;
-    margin: 0 auto 30px auto;
-    background: white;
-    padding: 20px 30px;
-    border-radius: 8px;
-    box-shadow: 0 0 12px rgba(0,0,0,0.1);
-    font-size: 1.1em;
-    line-height: 1.6;
-  }
-  .charts {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 40px;
-    max-width: 960px;
-    margin: 0 auto;
-  }
-  .chart-box {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 12px rgba(0,0,0,0.1);
-    width: 420px;
-  }
-  canvas {
-    display: block;
-    margin: 0 auto;
-  }
-  @media (max-width: 900px) {
-    .charts {
-      flex-direction: column;
-      align-items: center;
-    }
-    .chart-box {
-      width: 90%;
-    }
-  }
-</style>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8">
+  <title>สรุปผลการศึกษาต่อ ม.6 ปี 2567</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+    nav { background: #2c3e50; color: #ecf0f1; padding: 1rem; text-align: center; }
+    nav h1 { margin: 0; font-size: 1.2rem; }
+    #summary-cards { display: flex; gap: 1rem; padding: 1rem; }
+    .card { background: #ecf0f1; padding: 1rem; border-radius: 4px; flex: 1; text-align: center; }
+    #charts { display: flex; flex-wrap: wrap; gap: 2rem; padding: 1rem; }
+    #charts canvas { flex: 1; min-width: 300px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+    th, td { border: 1px solid #bdc3c7; padding: 0.5rem; text-align: left; }
+    #uni-section, #faculty-section { padding: 1rem; }
+    .accordion h3 { cursor: pointer; background: #3498db; color: #fff; padding: 0.5rem; margin: 0; }
+    .panel { display: none; background: #ecf0f1; padding: 0.5rem; }
+  </style>
 </head>
 <body>
+  <nav>
+    <h1>Dashboard สรุปการศึกษาต่อ ม.6 ปี 2567</h1>
+  </nav>
 
-<h1>แดชบอร์ดสรุปภาพรวมการศึกษาต่อของนักเรียน</h1>
+  <section id="summary-cards"></section>
 
-<section class="summary">
-  <h2>ภาพรวมของนักเรียนที่เข้าศึกษาต่อในมหาวิทยาลัย</h2>
-  <p>จากข้อมูลล่าสุด พบว่านักเรียนจำนวน <strong>153 คน</strong> ได้ศึกษาต่อในระดับอุดมศึกษา (มหาวิทยาลัย) ซึ่งแสดงถึงความสำเร็จในการเข้าสู่ระบบการศึกษาระดับสูง</p>
-  <p>นอกจากนี้ ยังมีนักเรียนที่เลือกศึกษาต่อในระดับ ปวส. จำนวน <strong>1 คน</strong> และนักเรียนในสถานะอื่น ๆ เช่น ซิ่วไปปีหน้า, Gap year, ไม่ศึกษาต่อ รวมทั้งสิ้น <strong>14 คน</strong></p>
-</section>
+  <section id="charts">
+    <canvas id="pie-status" width="400" height="400"></canvas>
+    <canvas id="bar-universities" width="600" height="400"></canvas>
+  </section>
 
-<section class="charts">
-  <div class="chart-box">
-    <h2>จำนวนผู้ศึกษาต่อแยกตามระดับการศึกษา</h2>
-    <canvas id="eduLevelChart" width="400" height="300"></canvas>
-  </div>
-  <div class="chart-box">
-    <h2>สถานะของนักเรียนทั้งหมด</h2>
-    <canvas id="statusChart" width="400" height="300"></canvas>
-  </div>
-</section>
+  <section id="uni-section">
+    <h2>จำนวนผู้ศึกษาต่อ แยกตามมหาวิทยาลัย</h2>
+    <table id="uni-table">
+      <thead><tr><th>มหาวิทยาลัย</th><th>จำนวน (คน)</th><th>ร้อยละ</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
 
-<section class="summary">
-  <h2>สรุปสถานะการศึกษาต่อของนักเรียน</h2>
-  <p>นักเรียนส่วนใหญ่มีสถานะ <strong>ศึกษาต่อ</strong> จำนวน 153 คน แสดงให้เห็นถึงความมุ่งมั่นและความต่อเนื่องในการศึกษาของกลุ่มนักเรียนนี้</p>
-  <p>ในขณะที่นักเรียนที่เลือก <strong>ซิ่วไปปีหน้า</strong> มีจำนวน 2 คน และนักเรียนที่ <strong>ไม่ศึกษาต่อ</strong> มีจำนวน 5 คน ซึ่งเป็นข้อมูลที่สำคัญสำหรับการวางแผนและพัฒนาการศึกษาต่อไป</p>
-</section>
+  <section id="faculty-section">
+    <h2>จำนวนผู้ศึกษาต่อ แยกตามคณะและสาขา</h2>
+    <div id="accordion" class="accordion"></div>
+  </section>
 
-<script>
-  // ข้อมูลสรุประดับการศึกษา
-  const eduLevelLabels = ['ระดับ ปวส.', 'ระดับอุดมศึกษา (มหาวิทยาลัย)'];
-  const eduLevelData = [1, 153];
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // ข้อมูลตัวอย่างสั้น ๆ (นำเข้าจาก Excel แปลงเป็น JSON)
+    const studentsData = [
+      {status:"ศึกษาต่อ", university:"สถาบันเทคโนโลยีจิตรลดา", faculty:"วิศวกรรมศาสตร์", major:"วิศวกรรมคอมพิวเตอร์"},
+      {status:"ศึกษาต่อ", university:"สถาบันการบินพลเรือน", faculty:"วิทยาศาสตรบัณฑิต", major:"วิทยาการการบิน"},
+      /* … เพิ่มข้อมูลทั้งหมดจาก Sheet1 … */
+    ];
 
-  // ข้อมูลสรุปสถานะนักเรียน
-  const statusLabels = ['ศึกษาต่อ', 'ซิ่วไปปีหน้า', 'ไม่ศึกษาต่อ', 'Gap year', 'อื่นๆ'];
-  const statusData = [153, 2, 5, 1, 6];
+    // สรุปภาพรวม
+    const total = studentsData.length;
+    const continued = studentsData.filter(s=>s.status==="ศึกษาต่อ").length;
+    const notContinued = total - continued;
 
-  // สร้างแผนภูมิแท่งสำหรับระดับการศึกษา
-  const ctxEduLevel = document.getElementById('eduLevelChart').getContext('2d');
-  new Chart(ctxEduLevel, {
-    type: 'bar',
-    data: {
-      labels: eduLevelLabels,
-      datasets: [{
-        label: 'จำนวน (คน)',
-        data: eduLevelData,
-        backgroundColor: ['#007acc', '#0099ff']
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: { beginAtZero: true, precision: 0 }
-      },
-      plugins: {
-        legend: { display: false },
-        title: { display: false }
+    // แสดงการ์ดสรุป
+    const cards = [
+      {label:"รวมทั้งหมด", value:total},
+      {label:"ศึกษาต่อ", value:continued},
+      {label:"ไม่ได้ศึกษาต่อ", value:notContinued}
+    ];
+    const cardContainer = document.getElementById("summary-cards");
+    cards.forEach(c=>{
+      const div = document.createElement("div");
+      div.className = "card";
+      div.innerHTML = `<h2>${c.value}</h2><p>${c.label}</p>`;
+      cardContainer.appendChild(div);
+    });
+
+    // Pie chart: สัดส่วนศึกษาต่อ vs ไม่ศึกษาต่อ
+    new Chart(
+      document.getElementById("pie-status").getContext("2d"),
+      { type:'pie',
+        data:{
+          labels:['ศึกษาต่อ','ไม่ได้ศึกษาต่อ'],
+          datasets:[{ data:[continued, notContinued], backgroundColor:['#27ae60','#c0392b'] }]
+        }
       }
-    }
-  });
+    );
 
-  // สร้างแผนภูมิวงกลมสำหรับสถานะนักเรียน
-  const ctxStatus = document.getElementById('statusChart').getContext('2d');
-  new Chart(ctxStatus, {
-    type: 'pie',
-    data: {
-      labels: statusLabels,
-      datasets: [{
-        label: 'สัดส่วนสถานะ',
-        data: statusData,
-        backgroundColor: ['#007acc', '#ffa500', '#dc3545', '#6c757d', '#17a2b8']
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { position: 'right' }
+    // Bar chart: Top 5 มหาวิทยาลัยที่มีผู้ศึกษาต่อมากสุด
+    const uniCounts = {};
+    studentsData.forEach(s=>{ if(s.status==="ศึกษาต่อ") uniCounts[s.university]=(uniCounts[s.university]||0)+1; });
+    const top5 = Object.entries(uniCounts).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    new Chart(
+      document.getElementById("bar-universities").getContext("2d"),
+      { type:'bar',
+        data:{
+          labels: top5.map(u=>u[0]),
+          datasets:[{ label:'จำนวน (คน)', data: top5.map(u=>u[1]), backgroundColor:'#2980b9' }]
+        }
       }
-    }
-  });
-</script>
+    );
 
+    // ตารางมหาวิทยาลัย
+    const tbodyUni = document.querySelector("#uni-table tbody");
+    const totalContinued = Object.values(uniCounts).reduce((a,b)=>a+b,0);
+    Object.entries(uniCounts)
+      .sort((a,b)=>b[1]-a[1])
+      .forEach(([uni,cnt])=>{
+        const pct = ((cnt/totalContinued)*100).toFixed(1)+'%';
+        tbodyUni.insertAdjacentHTML('beforeend',
+          `<tr><td>${uni}</td><td>${cnt}</td><td>${pct}</td></tr>`);
+      });
+
+    // Accordion คณะ–สาขา
+    const acc = document.getElementById("accordion");
+    const facMap = {};
+    studentsData.forEach(s=>{
+      if(s.status!=="ศึกษาต่อ") return;
+      facMap[s.faculty] = facMap[s.faculty] || {};
+      facMap[s.faculty][s.major] = (facMap[s.faculty][s.major]||0)+1;
+    });
+    Object.entries(facMap).forEach(([fac,majors])=>{
+      const totalFac = Object.values(majors).reduce((a,b)=>a+b,0);
+      const h3 = document.createElement("h3");
+      h3.textContent = `${fac} (${totalFac} คน)`;
+      const panel = document.createElement("div");
+      panel.className = "panel";
+      let tbl = `<table><thead><tr><th>สาขาวิชา</th><th>จำนวน</th></tr></thead><tbody>`;
+      Object.entries(majors).forEach(([mj,c])=>{
+        tbl += `<tr><td>${mj}</td><td>${c}</td></tr>`;
+      });
+      tbl += `</tbody></table>`;
+      panel.innerHTML = tbl;
+      h3.onclick = ()=> panel.style.display = panel.style.display==="block"?"none":"block";
+      acc.append(h3, panel);
+    });
+  </script>
 </body>
 </html>
