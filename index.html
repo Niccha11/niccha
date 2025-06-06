@@ -1,11 +1,185 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
-    <title>My Awesome Website</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>รายงานข้อมูลการศึกษาต่อ</title>
+<style>
+  body {
+    font-family: "Sarabun", Tahoma, sans-serif;
+    margin: 20px;
+    background: #f9f9f9;
+    color: #333;
+  }
+  h1 {
+    text-align: center;
+    color: #005a9c;
+    margin-bottom: 20px;
+  }
+  .dashboard {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 30px;
+  }
+  .chart-container {
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    width: 350px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 8px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background-color: #007acc;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+  tr:nth-child(even) {
+    background-color: #f2f9ff;
+  }
+  @media (max-width: 768px) {
+    .dashboard {
+      flex-direction: column;
+      align-items: center;
+    }
+    table, thead, tbody, th, td, tr {
+      display: block;
+    }
+    thead tr {
+      display: none;
+    }
+    tr {
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      padding: 10px;
+      background: #fff;
+      box-shadow: 0 0 5px rgba(0,0,0,0.05);
+    }
+    td {
+      border: none;
+      padding-left: 50%;
+      position: relative;
+      text-align: right;
+      white-space: normal;
+    }
+    td::before {
+      position: absolute;
+      top: 8px;
+      left: 10px;
+      width: 45%;
+      white-space: nowrap;
+      font-weight: bold;
+      text-align: left;
+      content: attr(data-label);
+      color: #007acc;
+    }
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<link rel="stylesheet" href="style.css">
 <body>
-    <h1>สวัสดี! ยินดีต้อนรับสู่เว็บไซต์ของฉัน</h1>
-    <p>นี่คือเว็บไซต์แรกบน GitHub ของฉัน</p>
+
+<h1>รายงานข้อมูลการศึกษาต่อของนักเรียน</h1>
+
+<div class="dashboard">
+  <div class="chart-container">
+    <canvas id="barChart"></canvas>
+  </div>
+  <div class="chart-container">
+    <canvas id="pieChart"></canvas>
+  </div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>คำนำหน้า</th>
+      <th>ชื่อ-นามสกุล</th>
+      <th>ห้อง</th>
+      <th>สถานะ</th>
+      <th>ระดับการศึกษา</th>
+      <th>สถาบัน</th>
+      <th>คณะ</th>
+      <th>สาขา</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td data-label="คำนำหน้า">นาย</td><td data-label="ชื่อ-นามสกุล">ศุภณัฐ อัญชันบุตร</td><td data-label="ห้อง">ห้อง 1</td><td data-label="สถานะ">ศึกษาต่อ</td><td data-label="ระดับการศึกษา">ระดับอุดมศึกษา (มหาวิทยาลัย)</td><td data-label="สถาบัน">สถาบันเทคโนโลยีจิตรลดา</td><td data-label="คณะ">วิศวกรรมศาสตร์</td><td data-label="สาขา">วิศวกรรมคอมพิวเตอร์</td></tr>
+    <tr><td data-label="คำนำหน้า">นางสาว</td><td data-label="ชื่อ-นามสกุล">พัชรพร เพิ่มศิลป์</td><td data-label="ห้อง">ห้อง 1</td><td data-label="สถานะ">ศึกษาต่อ</td><td data-label="ระดับการศึกษา">ระดับอุดมศึกษา (มหาวิทยาลัย)</td><td data-label="สถาบัน">สถาบันการบินพลเรือน</td><td data-label="คณะ">วิทยาศาสตรบัณฑิต</td><td data-label="สาขา">วิทยาการการบิน</td></tr>
+    <tr><td data-label="คำนำหน้า">นาย</td><td data-label="ชื่อ-นามสกุล">โชติ ปราโมช ณ อยุธยา</td><td data-label="ห้อง">ห้อง 1</td><td data-label="สถานะ">ศึกษาต่อ</td><td data-label="ระดับการศึกษา">ระดับอุดมศึกษา (มหาวิทยาลัย)</td><td data-label="สถาบัน">มหาวิทยาลัยศิลปากร วิทยาเขตพระราชวังสนามจันทร์</td><td data-label="คณะ">อักษรศาสตร์</td><td data-label="สาขา">สังคีตไทย</td></tr>
+    <tr><td data-label="คำนำหน้า">นาย</td><td data-label="ชื่อ-นามสกุล">สิรภัทร นุศาจารย์</td><td data-label="ห้อง">ห้อง 1</td><td data-label="สถานะ">ศึกษาต่อ</td><td data-label="ระดับการศึกษา">ระดับอุดมศึกษา (มหาวิทยาลัย)</td><td data-label="สถาบัน">มหาวิทยาลัยศรีนครินทรวิโรฒ</td><td data-label="คณะ">สังคมศาสตร์</td><td data-label="สาขา">วิชาเอกพัฒนาชุมชนเมือง</td></tr>
+    <tr><td data-label="คำนำหน้า">นาย</td><td data-label="ชื่อ-นามสกุล">ธนธรณ์ สุขทั่วญาติ</td><td data-label="ห้อง">ห้อง 1</td><td data-label="สถานะ">ศึกษาต่อ</td><td data-label="ระดับการศึกษา">ระดับอุดมศึกษา (มหาวิทยาลัย)</td><td data-label="สถาบัน">มหาวิทยาลัยศรีนครินทรวิโรฒ </td><td data-label="คณะ">บริหารธุรกิจ</td><td data-label="สาขา">ธุรกิจระหว่างประเทศ</td></tr>
+    <tr><td data-label="คำนำหน้า">นางสาว</td><td data-label="ชื่อ-นามสกุล">ชนาภา พรมกสิกร</td><td data-label="ห้อง">ห้อง 7</td><td data-label="สถานะ">ซิ่วไปปีหน้า</td><td data-label="ระดับการศึกษา"></td><td data-label="สถาบัน"></td><td data-label="คณะ"></td><td data-label="สาขา"></td></tr>
+    <tr><td data-label="คำนำหน้า">นางสาว</td><td data-label="ชื่อ-นามสกุล">พิมญาดา โพธิ์ศรี</td><td data-label="ห้อง">ห้อง 1</td><td data-label="สถานะ">ศึกษาต่อ</td><td data-label="ระดับการศึกษา">ระดับอุดมศึกษา (มหาวิทยาลัย)</td><td data-label="สถาบัน">มหาวิทยาลัยศิลปากร วิทยาเขตเพชรบุรี</td><td data-label="คณะ">บริหารธุรกิจ</td><td data-label="สาขา">สาขาการจัดการนวัตกรรมทางธุรกิจ</td></tr>
+    <!-- เพิ่มข้อมูลนักเรียนทั้งหมดในลักษณะนี้ -->
+  </tbody>
+</table>
+
+<script>
+  // สรุปข้อมูลสถานะจากไฟล์
+  const statusCounts = {
+    "ศึกษาต่อ": 153,
+    "ซิ่วไปปีหน้า": 2,
+    "ไม่ศึกษาต่อ": 5,
+    "Gap year": 1,
+    "อื่นๆ": 6
+  };
+
+  // สรุประดับการศึกษา
+  const eduLevelCounts = {
+    "ระดับ ปวส.": 1,
+    "ระดับอุดมศึกษา (มหาวิทยาลัย)": 152
+  };
+
+  // สร้างแผนภูมิแท่งแสดงระดับการศึกษา
+  const ctxBar = document.getElementById('barChart').getContext('2d');
+  new Chart(ctxBar, {
+    type: 'bar',
+    data: {
+      labels: Object.keys(eduLevelCounts),
+      datasets: [{
+        label: 'จำนวนผู้ศึกษาต่อ',
+        data: Object.values(eduLevelCounts),
+        backgroundColor: '#007acc'
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, precision: 0 } }
+    }
+  });
+
+  // สร้างแผนภูมิวงกลมแสดงสถานะ
+  const ctxPie = document.getElementById('pieChart').getContext('2d');
+  new Chart(ctxPie, {
+    type: 'pie',
+    data: {
+      labels: Object.keys(statusCounts),
+      datasets: [{
+        label: 'สัดส่วนสถานะนักเรียน',
+        data: Object.values(statusCounts),
+        backgroundColor: ['#007acc', '#ffa500', '#dc3545', '#6c757d', '#17a2b8']
+      }]
+    },
+    options: { responsive: true }
+  });
+</script>
+
 </body>
 </html>
